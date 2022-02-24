@@ -1,0 +1,38 @@
+{
+  "name": "core-scheduler",
+  "version": "1.0.0",
+  "description": "core-scheduler of IoT Edge",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "SET DEBUG=* & nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Noobmaster69-bug/core-scheduler.git"
+  },
+  "keywords": [
+    "IoT",
+    "core",
+    "IoT",
+    "IoT",
+    "Edge"
+  ],
+  "author": "Uy Son Tran",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Noobmaster69-bug/core-scheduler/issues"
+  },
+  "homepage": "https://github.com/Noobmaster69-bug/core-scheduler#readme",
+  "dependencies": {
+    "agenda": "^4.2.1",
+    "axios": "^0.26.0",
+    "debug": "^4.3.3",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3"
+  },
+  "devDependencies": {
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.15"
+  }
+}
