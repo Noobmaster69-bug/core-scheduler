@@ -1,8 +1,7 @@
+const Queue = require("bull");
+const dsModbus = new Queue("ds-modbus");
 const axios = require("axios");
-require("dotenv").config();
-
-function readModbus(job, done) {
-  console.log("readding Modbus");
+dsModbus.process("ds-modbus", function (job, done) {
   const {
     method,
     id,
@@ -15,6 +14,7 @@ function readModbus(job, done) {
     channels,
   } = job.data;
   function makeRequest(i) {
+    console.log("makingReqest");
     console.log(`${process.env.DSMODBUS}/${method}`);
     axios
       .post(`${process.env.DSMODBUS}/${method}`, {
@@ -49,5 +49,5 @@ function readModbus(job, done) {
       });
   }
   makeRequest(0);
-}
-module.exports = readModbus;
+});
+module.exports = dsModbus;
