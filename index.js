@@ -8,3 +8,4 @@ app.listen(process.env.PORT, () => {
 });
 require("./src/middleware/index.middleware")(app);
 require("./src/routes/index.router")(app);
+require("./src/config/index")();

@@ -25,7 +25,6 @@
   },
   "homepage": "https://github.com/Noobmaster69-bug/core-scheduler#readme",
   "dependencies": {
-    "agenda": "^4.2.1",
     "axios": "^0.26.0",
     "bull": "^4.6.2",
     "debug": "^4.3.3",
