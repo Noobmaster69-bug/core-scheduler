@@ -4,6 +4,9 @@ const dsModbus = require("../config/bull/bull.config");
 class devices {
   async newDevice(req, res) {
     const { name, interval, startTime } = req.body;
+    const pass = new Date(startTime).getTime();
+    const now = Date.now();
+    const count = (now - pass - ((now - pass) % interval)) / interval + 1;
     try {
       await dsModbus.add(
         "ds-modbus",
@@ -16,7 +19,7 @@ class devices {
           delay: 0,
           repeat: {
             every: parseInt(interval),
-            // startDate: startTime,
+            startDate: new Date(pass + count * interval),
           },
         }
       );
