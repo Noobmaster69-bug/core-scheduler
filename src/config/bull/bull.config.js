@@ -13,9 +13,14 @@ dsModbus.process("ds-modbus", function (job, done) {
         SouthProtocol,
       }
     )
-    .then((res) => done())
+    .then((res) => {
+      dsModbus.clean(1);
+      dsModbus.clean(1, "failed");
+      done();
+    })
     .catch((err) => {
-      console.log(err);
+      dsModbus.clean(1);
+      dsModbus.clean(1, "failed");
       done();
     });
 });
