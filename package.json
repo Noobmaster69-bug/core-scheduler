@@ -29,7 +29,8 @@
     "bull": "^4.6.2",
     "debug": "^4.3.3",
     "dotenv": "^16.0.0",
-    "express": "^4.17.3"
+    "express": "^4.17.3",
+    "redis": "^4.0.4"
   },
   "devDependencies": {
     "morgan": "^1.10.0",
