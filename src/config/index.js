@@ -4,7 +4,7 @@ module.exports = function () {
   console.log("running");
   effort();
 };
-function effort() {
+function effort(e) {
   axios
     .get(`${process.env.METADATA || "127.0.0.1:33335"}/getAllSchedule`)
     .then(({ data }) => {
@@ -13,6 +13,7 @@ function effort() {
       });
     })
     .catch((err) => {
-      effort();
+      console.log(err);
+      effort(err);
     });
 }
