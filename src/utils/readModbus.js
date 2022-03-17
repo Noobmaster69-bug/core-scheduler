@@ -2,7 +2,6 @@ const axios = require("axios");
 require("dotenv").config();
 
 function readModbus(job, done) {
-  console.log("readding Modbus");
   const {
     method,
     id,
@@ -15,7 +14,6 @@ function readModbus(job, done) {
     channels,
   } = job.data;
   function makeRequest(i) {
-    console.log(`${process.env.DSMODBUS}/${method}`);
     axios
       .post(`${process.env.DSMODBUS}/${method}`, {
         host,
@@ -30,7 +28,6 @@ function readModbus(job, done) {
         quantity: channels[i].quantity,
       })
       .then((res) => {
-        console.log(res.data);
         i++;
         if (i < channels.length) {
           makeRequest(i + 1);
@@ -39,7 +36,6 @@ function readModbus(job, done) {
         }
       })
       .catch((err) => {
-        console.log(err);
         i++;
         if (i < channels.length) {
           makeRequest(i + 1);

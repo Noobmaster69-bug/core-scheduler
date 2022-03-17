@@ -16,8 +16,9 @@ class devices {
     }
     delete req.body.interval;
     delete req.body.startTime;
+    const data = JSON.stringify(req.body);
     try {
-      await dsModbus.add("ds-modbus", req.body, {
+      await dsModbus.add("ds-modbus", data, {
         jobId: name,
         delay: 0,
         repeat: {
