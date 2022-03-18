@@ -12,6 +12,6 @@ function effort(e) {
       });
     })
     .catch((err) => {
-      effort(err);
+      setTimeout(() => effort(err), 5000);
     });
 }
