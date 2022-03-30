@@ -3,7 +3,7 @@ require("dotenv").config();
 const dsModbus = require("../config/bull/bull.config");
 class devices {
   async newDevice(req, res) {
-    const { name, interval, startTime } = req.body;
+    const { id, interval, startTime } = req.body;
     function parseTime(startTime) {
       if (startTime) {
         const pass = new Date(startTime).getTime();
@@ -18,20 +18,27 @@ class devices {
     delete req.body.startTime;
     const data = JSON.stringify(req.body);
     try {
-      await dsModbus.add("ds-modbus", data, {
-        jobId: name,
+      const job = await dsModbus.add("ds-modbus", data, {
+        jobId: id,
         delay: 0,
         repeat: {
           every: parseInt(interval),
           startDate: parseTime(startTime),
         },
       });
+      job.opts.repeat.key;
       if (res) {
         return res.sendStatus(200);
       }
     } catch (err) {
       console.log(err);
     }
+  }
+  async deleteJob(req, res) {
+    const { id = null } = req.query;
+    const job = (await dsModbus.getRepeatableJobs()).find((e) => e.id === id);
+    await dsModbus.removeRepeatableByKey(job.key);
+    res.send(200);
   }
 }
 module.exports = new devices();
