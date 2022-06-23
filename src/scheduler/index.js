@@ -1,14 +1,7 @@
-/**
- * class of Task
- *
- * @param {task}
- * @return {Axios} A new instance of Axios
- */
-
 class Task {
   //create uniqe id for task, this id will unchange until
   id = require("crypto").randomUUID();
-  //id of
+  //id of Timer
   #TimerID;
   #option = {
     startTime: Date.now(),
@@ -76,11 +69,18 @@ class Task {
 
 class Scheduler {
   #tasks = [];
+  /**
+   * create New Task
+   *
+   * @param {task}
+   * @return {taskID}
+   */
   addTask(callback = () => {}, interval = 0, params = {}, option = {}) {
     const task = new Task(callback, interval, params, option);
     this.#tasks.push(task);
     return task.id;
   }
+
   deleteTask(id) {
     if (this.#tasks.some((task) => task.id === id)) {
       this.#tasks.find((task) => task.id === id).delete();
