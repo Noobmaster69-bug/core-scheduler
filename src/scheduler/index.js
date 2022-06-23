@@ -1,13 +1,22 @@
 class Task {
-  //create uniqe id for task, this id will unchange until
+  //create uniqe id for task, this id will unchange
   id = require("crypto").randomUUID();
   //id of Timer
   #TimerID;
+
   #option = {
     startTime: Date.now(),
+    retryOnError: Number.POSITIVE_INFINITY,
+    key: null,
   };
+
   #params = {};
+
   #interval;
+
+  #run = 0;
+  #error = 0;
+
   #callback = () => {};
   constructor(callback, interval, params, option = {}) {
     this.#option = { ...this.#option, ...option };
@@ -19,12 +28,18 @@ class Task {
   //create new task
   #newTask() {
     this.#TimerID = setTimeout(() => {
+      this.#newTask();
       try {
+        this.#run++;
         this.#callback(this.#params);
       } catch (err) {
+        this.#error++;
         console.log(err);
+        if (this.#error === this.#option.retryOnError) {
+          this.delete();
+          throw new Error(`Task ${this.id} has Error`);
+        }
       }
-      this.#newTask();
     }, this.#Timer());
   }
   //change params
@@ -37,6 +52,30 @@ class Task {
   //delete task
   delete() {
     clearInterval(this.#TimerID);
+  }
+  //set task key
+  setKey(key) {
+    if (this.#option.key === null) {
+      console.log("Warning: You are changing task key");
+    }
+    this.#option.key = key;
+  }
+  //get task key
+  getKey() {
+    return this.#option.key;
+  }
+
+  getTaskInfo() {
+    return {
+      id: this.id,
+      key: this.#option.key,
+      startTime: this.#option.startTime,
+      interval: this.#interval,
+      params: this.#params,
+      run: this.#run,
+      retryOnError: this.#option.retryOnError,
+      error: this.#error,
+    };
   }
   //this method will calculate next Start Time
   #Timer() {
@@ -73,7 +112,7 @@ class Scheduler {
    * create New Task
    *
    * @param {task}
-   * @return {taskID}
+   * @return {number}
    */
   addTask(callback = () => {}, interval = 0, params = {}, option = {}) {
     const task = new Task(callback, interval, params, option);
@@ -88,6 +127,12 @@ class Scheduler {
       return true;
     } else return false;
   }
+  deleteTaskByKey(key) {
+    if (this.#tasks.some((task) => task.getKey() === key)) {
+      this.#tasks.find((task) => task.getKey() === key).delete();
+      this.#tasks = this.#tasks.filter((task) => task.getKey() !== key);
+    }
+  }
   updateTask(id, params) {
     if (!params) {
       throw new Error("Params cannot empty");
@@ -97,8 +142,22 @@ class Scheduler {
     }
     if (this.#tasks.some((task) => task.id === id)) {
       this.#tasks.find((task) => task.id === id).putParams(params);
+      return true;
     }
-    return true;
+    return false;
+  }
+  updateTaskByKey(key, params) {
+    if (!params) {
+      throw new Error("Params cannot empty");
+    }
+    if (!id) {
+      throw new Error("id cannot empty");
+    }
+    if (this.#tasks.some((task) => task.getKey() === key)) {
+      this.#tasks.find((task) => task.getKey() === key).putParams(params);
+      return true;
+    }
+    return false;
   }
 }
 module.exports = new Scheduler();
